@@ -9,16 +9,19 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
+import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.view.View.OnTouchListener;
 import android.widget.RelativeLayout;
 
-import org.opencv.core.Point;
+//import org.opencv.core.Point;
 import org.opencv.osgi.OpenCVNativeLoader;
 import org.opencv.ximgproc.ContourFitting;
+
 import android.util.Log;
+import android.graphics.Point;
 
 public class MainActivity extends Activity {
     ImageView imageView;
@@ -30,14 +33,22 @@ public class MainActivity extends Activity {
     Bitmap bitmap1, bitmapic;
     private float x, y;    // 原本圖片存在的X,Y軸位置
     private int mx, my; // 圖片被拖曳的X ,Y軸距離長度
+    private int screenWidth, screenHeight;
+
     //private float x, y;    // 原本圖片存在的X,Y軸位置
     //private int mx, my; // 圖片被拖曳的X ,Y軸距離長度
     //RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(21,19);
     private class ViewPoint {
-        float x;
-        float y;
+        int x;
+        int y;
     }
-    ViewPoint topleft,topright,bottomleft,bottomright;
+
+    int[] posXY = new int[2];
+    ViewPoint topleft = new ViewPoint();
+    ViewPoint topright = new ViewPoint();
+    ViewPoint bottomleft = new ViewPoint();
+    ViewPoint bottomright = new ViewPoint();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,15 +71,21 @@ public class MainActivity extends Activity {
         imageView.invalidate();
         BitmapDrawable drawable = (BitmapDrawable) imageView.getDrawable();
         bitmap = drawable.getBitmap();
-        imageView.setImageBitmap(bitmap);
+        //imageView.setImageBitmap(bitmap);
         TouchListen imgListener = new TouchListen();
-        for(int i=0;i<4;i++){
+        for (int i = 0; i < 4; i++) {
             ic[i].setOnTouchListener(imgListener);
         }
-
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        screenWidth = size.x;
+        screenHeight = size.y;
+        Log.e("screenWidth", "" + screenWidth);
+        Log.e("screenHeight", "" + screenHeight);
     }
-    private class TouchListen implements OnTouchListener
-    {
+
+    private class TouchListen implements OnTouchListener {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             //Log.d("View", v.toString());
@@ -77,16 +94,29 @@ public class MainActivity extends Activity {
                 case MotionEvent.ACTION_DOWN:// 按下圖片時
                     x = event.getX();                  //觸控的X軸位置
                     y = event.getY();                  //觸控的Y軸位置
-
+                    break;
                 case MotionEvent.ACTION_MOVE:// 移動圖片時
 
                     //getX()：是獲取當前控件(View)的座標
-                    Log.d("axis", x+" " + y);
+                    Log.d("axis", x + " " + y);
                     //getRawX()：是獲取相對顯示螢幕左上角的座標
                     mx = (int) (event.getRawX() - x);
-                    my = (int) (event.getRawY() - y)-60;
-                    Log.d("getRaw", mx+" " + my);
-                    v.layout(mx, my, mx + v.getWidth(), my + v.getHeight());
+                    my = (int) (event.getRawY() - y) - 60;
+                    Log.d("getRaw", mx + " " + my);
+                    if (mx < screenWidth / 2 + imageView.getWidth() / 2 && mx > screenWidth / 2 - imageView.getWidth() / 2 && my < screenHeight / 2 + imageView.getHeight() / 2 && my > screenHeight / 2 - imageView.getHeight() / 2) {
+                        v.layout(mx, my, mx + v.getWidth(), my + v.getHeight());
+                    }
+                    break;
+                case MotionEvent.ACTION_UP:
+                    Log.e("source", "width: " + imageView.getWidth() + " height: " + imageView.getHeight());
+                    imageView.getLocationOnScreen(posXY);
+                    Log.e("getLocationOnScreen", "width: " + posXY[0] + " height: " + posXY[1]);
+                    if (v == ic[0]) {
+
+                        topleft.x = mx;
+                        topleft.y = my;
+                        Log.e("ic[0]", "width: " + topleft.x + " height: " + topleft.y);
+                    }
                     break;
             }
             //Log.e("address", String.valueOf(mx) + "~~" + String.valueOf(my)); // 記錄目前位置
@@ -94,20 +124,21 @@ public class MainActivity extends Activity {
 
         }
     }
+
     @Override
     protected void onResume() {
         super.onResume();
-        Log.e("source","width: " + imageView.getWidth()+" height: "+imageView.getHeight());
+
     }
+
     public void Comput(ImageView imageview) {
 
 
     }
 
 
-
-        //zoomImageView.setImageBitmap(bitmapic);
-        //bitmap1 = ImageProcess.myWarpPerspective(bitmap,new Point(1145,821),new Point(2977,463),new Point(3000,2413),new Point(1216,1910));
+    //zoomImageView.setImageBitmap(bitmapic);
+    //bitmap1 = ImageProcess.myWarpPerspective(bitmap,new Point(1145,821),new Point(2977,463),new Point(3000,2413),new Point(1216,1910));
 
 
 
