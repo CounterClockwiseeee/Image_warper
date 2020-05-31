@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <ImageView
+        android:id="@+id/imgV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:src="@drawable/test" />
+
+    <ImageView
+        android:id="@+id/icon1"
+        android:layout_width="21dip"
+        android:layout_height="19dip"
+        android:layout_gravity="right"
+        android:src="@drawable/face002" />
+    <ImageView
+        android:id="@+id/icon2"
+        android:layout_width="21dip"
+        android:layout_height="19dip"
+        android:layout_gravity="right"
+        android:src="@drawable/face002" />
+    <ImageView
+        android:id="@+id/icon3"
+        android:layout_width="21dip"
+        android:layout_height="19dip"
+        android:layout_gravity="right"
+        android:src="@drawable/face002" />
+    <ImageView
+        android:id="@+id/icon4"
+        android:layout_width="21dip"
+        android:layout_height="19dip"
+        android:layout_gravity="right"
+        android:src="@drawable/face002" />
+
+    <!--<ntou.cs.demo.ZoomImageView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/zoom_image_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </ntou.cs.demo.ZoomImageView>-->
+    <Button
+        android:id="@+id/btn_test"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10sp"
+        android:text=" Click me! " />
+
+</FrameLayout>
