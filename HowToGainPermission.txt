@@ -1,0 +1,51 @@
+//Add this in AndroidManifest just BEFORE the <application> tag
+
+<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
+
+
+//If device is android 10 add this IN the  <application> tag
+//NOTE:It should work without this but... ,just for safe
+
+android:requestLegacyExternalStorage="true"
+
+ex:<application
+	android:requestLegacyExternalStorage="true"
+	......
+	......
+	>
+
+
+
+//Add this to mainActivity to gain permission
+
+private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static String[] PERMISSIONS_STORAGE = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
+
+
+
+//Add this to onCreate to gain permission
+
+verifyStoragePermissions(this);
+
+
+
+//Add this to mainActivity to gain permission
+
+public static void verifyStoragePermissions(Activity activity) {
+        // Check if we have write permission
+        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(
+                    activity,
+                    PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE
+            );
+        }
+    }
