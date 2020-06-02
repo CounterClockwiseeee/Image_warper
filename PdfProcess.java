@@ -23,7 +23,7 @@ public class PdfProcess {
     by calling this method with param fileName = ""
     the fileName is default set to current time by "yyyy-MM-dd-HH-mm-ss.pdf"
     */
-    
+
     //path to save the pdf: internalStorage/
 
     //How to use this method:
@@ -42,6 +42,7 @@ public class PdfProcess {
 
     public static void createPdfOfImages(ArrayList<Bitmap> bitmaps, String fileName) throws IOException, DocumentException {
         fileName = fileName.equals("")?getDateTime()+".pdf":fileName;
+        fileName = fileName.endsWith(".pdf")?fileName:fileName+".pdf";
         Document doc = new Document();
         float maxHeight = 0;
         float maxWidth = 0;
