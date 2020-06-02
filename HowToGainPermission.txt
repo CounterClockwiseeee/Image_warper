@@ -30,7 +30,7 @@ private static final int REQUEST_EXTERNAL_STORAGE = 1;
 
 //Add this to onCreate to gain permission
 
-verifyStoragePermissions(this);
+verifyStoragePermissions(MainActivity.this);
 
 
 
