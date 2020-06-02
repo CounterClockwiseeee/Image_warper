@@ -12,8 +12,6 @@ import com.itextpdf.text.Image;
 import com.itextpdf.text.RectangleReadOnly;
 import com.itextpdf.text.pdf.PdfWriter;
 
-import org.bytedeco.javacv.FrameFilter;
-
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -35,17 +33,12 @@ public class PdfProcess {
     ArrayList<Bitmap> m = new ArrayList<Bitmap>();
     m.add(bitmap1);
     m.add(bitmap);
-    try {
-        PdfProcess.createPdfOfImages(this,m,"test.pdf");
-    } catch (IOException e) {
-        e.printStackTrace();
-    } catch (DocumentException e) {
-        e.printStackTrace();
-    }
+    PdfProcess.createPdfOfImages(this,m,"test.pdf");
+
     */
 
-    public static void createPdfOfImages(Activity activity, final ArrayList<Bitmap> bitmaps, String fileName) throws IOException, DocumentException {
-        final ProgressDialog dialog = ProgressDialog.show(activity, "Progressing...", "Please wait", true);
+    public static void createPdfOfImages(Activity activity, final ArrayList<Bitmap> bitmaps, String fileName){
+        final ProgressDialog dialog = ProgressDialog.show(activity, "正在產生PDF...", "請稍後", true);
         fileName = fileName.equals("") ? getDateTime() + ".pdf" : fileName;
         fileName = fileName.endsWith(".pdf") ? fileName : fileName + ".pdf";
         final String finalFileName = fileName;
