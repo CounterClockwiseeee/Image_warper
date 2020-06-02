@@ -1,5 +1,7 @@
 package com.example.myapplication;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.os.Environment;
 import android.util.Log;
@@ -9,6 +11,8 @@ import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.RectangleReadOnly;
 import com.itextpdf.text.pdf.PdfWriter;
+
+import org.bytedeco.javacv.FrameFilter;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
@@ -32,7 +36,7 @@ public class PdfProcess {
     m.add(bitmap1);
     m.add(bitmap);
     try {
-        PdfProcess.createPdfOfImages(m,"test.pdf");
+        PdfProcess.createPdfOfImages(this,m,"test.pdf");
     } catch (IOException e) {
         e.printStackTrace();
     } catch (DocumentException e) {
@@ -40,33 +44,47 @@ public class PdfProcess {
     }
     */
 
-    public static void createPdfOfImages(ArrayList<Bitmap> bitmaps, String fileName) throws IOException, DocumentException {
-        fileName = fileName.equals("")?getDateTime()+".pdf":fileName;
-        fileName = fileName.endsWith(".pdf")?fileName:fileName+".pdf";
-        Document doc = new Document();
-        float maxHeight = 0;
-        float maxWidth = 0;
-        for(Bitmap b:bitmaps){
-            maxHeight = maxHeight>b.getHeight()?maxHeight:b.getHeight();
-            maxWidth = maxWidth>b.getWidth()?maxWidth:b.getWidth();
-        }
-        //doc.setPageSize(PageSize.A4);
-        doc.setPageSize(new RectangleReadOnly((float)(maxWidth*1),(float)(maxHeight*1)));
-        doc.setMargins(0,0,0,0);
-        PdfWriter.getInstance(doc,new FileOutputStream(Environment.getExternalStorageDirectory()+"/"+fileName));
-        //Log.d("PDF",Environment.getExternalStorageDirectory()+"/"+fileName);
-        doc.open();
+    public static void createPdfOfImages(Activity activity, final ArrayList<Bitmap> bitmaps, String fileName) throws IOException, DocumentException {
+        final ProgressDialog dialog = ProgressDialog.show(activity, "Progressing...", "Please wait", true);
+        fileName = fileName.equals("") ? getDateTime() + ".pdf" : fileName;
+        fileName = fileName.endsWith(".pdf") ? fileName : fileName + ".pdf";
+        final String finalFileName = fileName;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
 
-        for(Bitmap b:bitmaps){
-            ByteArrayOutputStream output = new ByteArrayOutputStream();
-            //Log.d("IMG",String.format("%d %d%n",b.getWidth(),b.getHeight()));
-            b.compress(Bitmap.CompressFormat.PNG,100,output);
-            Image img = Image.getInstance(output.toByteArray());
-            img.setAbsolutePosition((maxWidth-b.getWidth())/2,(maxHeight-b.getHeight())/2);
-            doc.add(img);
-            doc.newPage();
-        }
-        doc.close();
+                    Document doc = new Document();
+                    float maxHeight = 0;
+                    float maxWidth = 0;
+                    for (Bitmap b : bitmaps) {
+                        maxHeight = maxHeight > b.getHeight() ? maxHeight : b.getHeight();
+                        maxWidth = maxWidth > b.getWidth() ? maxWidth : b.getWidth();
+                    }
+                    //doc.setPageSize(PageSize.A4);
+                    doc.setPageSize(new RectangleReadOnly((float) (maxWidth * 1), (float) (maxHeight * 1)));
+                    doc.setMargins(0, 0, 0, 0);
+                    PdfWriter.getInstance(doc, new FileOutputStream(Environment.getExternalStorageDirectory() + "/" + finalFileName));
+                    //Log.d("PDF",Environment.getExternalStorageDirectory()+"/"+fileName);
+                    doc.open();
+
+                    for (Bitmap b : bitmaps) {
+                        ByteArrayOutputStream output = new ByteArrayOutputStream();
+                        //Log.d("IMG",String.format("%d %d%n",b.getWidth(),b.getHeight()));
+                        b.compress(Bitmap.CompressFormat.PNG, 100, output);
+                        Image img = Image.getInstance(output.toByteArray());
+                        img.setAbsolutePosition((maxWidth - b.getWidth()) / 2, (maxHeight - b.getHeight()) / 2);
+                        doc.add(img);
+                        doc.newPage();
+                    }
+                    doc.close();
+                } catch (Exception e) {
+                    Log.d("EXC", e.toString());
+                }finally {
+                    dialog.dismiss();
+                }
+            }
+        }).start();
     }
 
     private static String getDateTime(){
