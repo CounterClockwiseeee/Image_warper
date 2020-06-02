@@ -13,9 +13,19 @@ import com.itextpdf.text.pdf.PdfWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 public class PdfProcess {
+    /*
+    by calling this method with param fileName = ""
+    the fileName is default set to current time by "yyyy-MM-dd-HH-mm-ss.pdf"
+    */
+    
+    //path to save the pdf: internalStorage/
+
     //How to use this method:
     /*
     ArrayList<Bitmap> m = new ArrayList<Bitmap>();
@@ -29,8 +39,9 @@ public class PdfProcess {
         e.printStackTrace();
     }
     */
-    
+
     public static void createPdfOfImages(ArrayList<Bitmap> bitmaps, String fileName) throws IOException, DocumentException {
+        fileName = fileName.equals("")?getDateTime()+".pdf":fileName;
         Document doc = new Document();
         float maxHeight = 0;
         float maxWidth = 0;
@@ -56,5 +67,11 @@ public class PdfProcess {
         }
         doc.close();
     }
+
+    private static String getDateTime(){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.getDefault());
+        return sdf.format(new Date());
+    }
+
 
 }
