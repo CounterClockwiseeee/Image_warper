@@ -1,7 +1,8 @@
 package com.example.myapplication;
 
-
 import android.graphics.Bitmap;
+import android.os.Environment;
+import android.util.Log;
 
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
@@ -11,11 +12,27 @@ import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.osgi.OpenCVNativeLoader;
 import org.opencv.android.Utils;
+
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.lang.Math;
 
+import static com.example.myapplication.PdfProcess.getDateTime;
 
 
 public class ImageProcess {
+    public static void saveImage(Bitmap srcBitmap){
+        try{
+            String path = Environment.getExternalStorageDirectory()+"/"+getDateTime()+".jpg";
+            OutputStream output = new FileOutputStream(path);
+            srcBitmap.compress(Bitmap.CompressFormat.JPEG,100,output);
+            output.flush();
+            output.close();
+        }catch(Exception e){
+            Log.d("EXC",e.toString());
+        }
+    }
+
 
     public static Bitmap myWarpPerspective(Bitmap srcBitmap, Point lu, Point ru, Point rd, Point ld) {
         Mat src = new Mat(srcBitmap.getHeight(),srcBitmap.getWidth(), CvType.CV_8UC3);
@@ -40,9 +57,6 @@ public class ImageProcess {
 
         MatOfPoint2f dstMat = new MatOfPoint2f(new Point(0,0),new Point((int)maxWid,0),new Point((int)maxWid,(int)maxLen),new Point(0,(int)maxLen));
         MatOfPoint2f srcMat = new MatOfPoint2f(lu,ru,rd,ld);
-
-
-
 
         Mat perspective = Imgproc.getPerspectiveTransform(srcMat,dstMat);
         Mat resultMat = src.clone();
