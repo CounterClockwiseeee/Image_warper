@@ -1,51 +1,57 @@
-package com.example.myapplication;
+package ntou.cs.java.projects;
 
 import androidx.appcompat.app.AppCompatActivity;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
+
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageView;
+import android.widget.TextView;
 
-import org.opencv.core.Point;
-import org.opencv.osgi.OpenCVNativeLoader;
-
-
+import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
-    ImageView imageView;
-    boolean clicked = false;
-
-    Bitmap bitmap;
-    Bitmap bitmap1;
-
-
+    private ArrayList<Uri> imageData;//add this to the top as var
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        OpenCVNativeLoader loader = new OpenCVNativeLoader();
-        loader.init();
-
-
-        imageView = (ImageView)findViewById(R.id.imgV);
-        imageView.invalidate();
-        BitmapDrawable drawable = (BitmapDrawable) imageView.getDrawable();
-        bitmap = drawable.getBitmap();
-        bitmap1 = ImageProcess.myWarpPerspective(bitmap,new Point(1145,821),new Point(2977,463),new Point(3000,2413),new Point(1216,1910));
-
-        imageView.setImageBitmap(bitmap);
     }
-
-    public void trans(View view) {
-
-        if(!clicked){
-            imageView.setImageBitmap(bitmap1);
-            clicked = !clicked;
-        }else{
-            imageView.setImageBitmap(bitmap);
-            clicked = !clicked;
+    public void btnAction(View view){
+        setImageData();
+    }
+    public void setTextView(){//just an example of manipulating list of Uris
+        TextView textView = (TextView)findViewById(R.id.textView);
+        textView.setText("");
+        for(Uri data:getImageLocation()){
+            textView.append(data.toString()+"\n");
         }
     }
-
-
+    public void setImageData(){
+        Intent intent=new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/*");
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        startActivityForResult(intent,1234);
+    }
+    @Override
+    protected void onActivityResult(int requestCode,int resultCode,Intent data){
+        super.onActivityResult(requestCode,resultCode,data);
+        if(requestCode==1234){
+            if(resultCode==RESULT_OK){
+                imageData=new ArrayList<>();
+                if(data.getClipData() != null){
+                    int dataCount = data.getClipData().getItemCount();
+                    for(int i=0;i<dataCount;i++){
+                        imageData.add(data.getClipData().getItemAt(i).getUri());
+                    }
+                }
+                else if(data.getData()!=null){
+                    imageData.add(data.getData());
+                }
+            }
+        }
+        setTextView();//This is where your code goes if you need to use the data,delete the setTextView and change it to your function
+    }
+    public ArrayList<Uri> getImageLocation(){
+        return imageData;//return a ArrayList of Uri, so please consider there may be multiple data
+    }
 }
