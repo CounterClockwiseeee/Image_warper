@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -26,29 +27,20 @@ import android.util.Log;
 
 public class MainActivity extends Activity {
     ImageView imageView;
-    //private ZoomImageView zoomImageView;
     boolean clicked = false;
     private ImageView ic[] = new ImageView[4];
-    private int count = 0;
     Bitmap bitmap;
-    Bitmap bitmap1, bitmapic;
+    Bitmap bitmap1;
     private float x, y, rateWidth, rateHeight;    // 原本圖片存在的X,Y軸位置
     private int mx, my; // 圖片被拖曳的X ,Y軸距離長度
     private int screenWidth, screenHeight;
     private boolean flag = false;
 
-    //private float x, y;    // 原本圖片存在的X,Y軸位置
-    //private int mx, my; // 圖片被拖曳的X ,Y軸距離長度
-    //RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(21,19);
     private class ViewPoint {
         int x;
         int y;
     }
 
-    /*int[] topLeftXY = new int[2];
-    int[] topRightXY = new int[2];
-    int[] bottomLeftXY = new int[2];
-    int[] bottomRightXY = new int[2];*/
     ViewPoint topLeft = new ViewPoint();
     ViewPoint topRight = new ViewPoint();
     ViewPoint bottomLeft = new ViewPoint();
@@ -66,17 +58,13 @@ public class MainActivity extends Activity {
         ic[1] = (ImageView) findViewById(R.id.icon2);//右上
         ic[2] = (ImageView) findViewById(R.id.icon3);//右下
         ic[3] = (ImageView) findViewById(R.id.icon4);//左下
-        //ic.invalidate();
-        //BitmapDrawable drawable1 = (BitmapDrawable) ic.getDrawable();
-        //bitmapic = drawable1.getBitmap();
-        //img.setOnTouchListener(this);//觸控時監聽
-        //ImageView ic = (ImageView)findViewById(R.id.imageView1);
-        //zoomImageView = (ZoomImageView) findViewById(R.id.zoom_image_view);
-        imageView = (ImageView) findViewById(R.id.imgV);
+        String imagePath = getIntent().getStringExtra("image_path");
+        Bitmap bitmapImage = BitmapFactory.decodeFile(imagePath);
+        imageView.setImageBitmap(bitmapImage);
+        //imageView = (ImageView) findViewById(R.id.imgV);
         imageView.invalidate();
         BitmapDrawable drawable = (BitmapDrawable) imageView.getDrawable();
         bitmap = drawable.getBitmap();
-        //imageView.setImageBitmap(bitmap);
 
         Display display = getWindowManager().getDefaultDisplay();
         android.graphics.Point size = new android.graphics.Point();
