@@ -6,13 +6,21 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.text.Layout;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.LinearLayoutCompat;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -41,11 +49,12 @@ public class PdfProcess {
     ArrayList<Bitmap> m = new ArrayList<Bitmap>();
     m.add(bitmap1);
     m.add(bitmap);
-    PdfProcess.createPdfOfImages(MainActivity.this,m,"test.pdf");
+    PdfProcess.CreatePdfOfImagesWithUserInput(MainActivity.this,m);
 
     */
 
-    public static void createPdfOfImages(final Activity activity, final ArrayList<Bitmap> bitmaps, String fileName){
+
+    private static void createPdfOfImages(final Activity activity, final ArrayList<Bitmap> bitmaps,String fileName){
         final ProgressDialog dialog = ProgressDialog.show(activity, "正在產生PDF...", "請稍後", true);
         fileName = fileName.equals("") ? getDateTime() + ".pdf" : fileName;
         fileName = fileName.endsWith(".pdf") ? fileName : fileName + ".pdf";
@@ -89,6 +98,7 @@ public class PdfProcess {
                             builder.setNegativeButton("確定", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
+
                                 }
                             });
                             AlertDialog alertDialog = builder.create();
@@ -102,6 +112,33 @@ public class PdfProcess {
                 }
             }
         }).start();
+    }
+
+
+    public static void CreatePdfOfImagesWithUserInput(final Activity activity, final ArrayList<Bitmap> bitmaps){
+        final String[] fileName = {""};
+        AlertDialog.Builder inputFileName = new AlertDialog.Builder(activity);
+        inputFileName.setCancelable(false);
+        inputFileName.setTitle("請輸入PDF名稱:");
+
+        final LinearLayout layout = new LinearLayout(activity);
+        layout.setOrientation(LinearLayout.HORIZONTAL);
+        final EditText input = new EditText(activity);
+        input.setHint("檔案名稱");
+
+        layout.addView(input);
+        inputFileName.setView(layout);
+        inputFileName.setPositiveButton("確定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                fileName[0] = input.getText().toString();
+                PdfProcess.createPdfOfImages(activity,bitmaps, fileName[0]);
+            }
+        });
+        AlertDialog alertDialog = inputFileName.create();
+        alertDialog.show();
+        //while(alertDialog.isShowing());
+
     }
 
     public static String getDateTime(){
