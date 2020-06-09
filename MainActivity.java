@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        
+
         /*
         * CODE HERE
         * CODE HERE
@@ -59,7 +59,13 @@ public class MainActivity extends AppCompatActivity {
 
         //call below to activate image selection and create pdf
         //selectImageAndCreatePdf();
-        
+        Button bt2 = (Button)findViewById(R.id.button2);
+        bt2.setOnClickListener(new Button.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                selectImageAndCreatePdf();
+            }
+        });
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
