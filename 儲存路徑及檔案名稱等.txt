@@ -1,0 +1,5 @@
+saveImage預設儲存至 內部儲存空間/Pictures/
+selectImageAndCreatePdf 預設儲存至 內部儲存空間/Documents/
+
+saveImage將圖片存為當下時間.jpg
+selectImageAndCreatePdf預設(使用者無輸入)將PDF存為當下時間.pdf
