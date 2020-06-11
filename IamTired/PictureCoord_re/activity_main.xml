@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    tools:context=".MainActivity">
+    <ImageView
+        android:id="@+id/imgV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:adjustViewBounds="true"
+        android:maxHeight="2040px"
+        android:maxWidth="2040px"
+        android:src="@drawable/testpicture"/>
+    <!--左上-->
+    <ImageView
+        android:id="@+id/icon1"
+        android:layout_width="20dip"
+        android:layout_height="20dip"
+        android:layout_gravity="center"
+        android:layout_marginLeft="-50px"
+        android:layout_marginTop="-50px"
+        android:clickable="false"
+        android:src="@drawable/greendot" />
+    <!--右上-->
+    <!--右下-->
+
+    <!--左下-->
+    <ImageView
+        android:id="@+id/icon2"
+        android:layout_width="20dip"
+        android:layout_height="20dip"
+        android:layout_gravity="center"
+        android:layout_marginLeft="50px"
+        android:layout_marginTop="-50px"
+        android:clickable="false"
+        android:src="@drawable/greendot" />
+
+    <ImageView
+        android:id="@+id/icon3"
+        android:layout_width="20dip"
+        android:layout_height="20dip"
+        android:layout_gravity="center"
+        android:layout_marginLeft="50px"
+        android:layout_marginTop="50px"
+        android:clickable="false"
+        android:src="@drawable/greendot" />
+
+    <ImageView
+        android:id="@+id/icon4"
+        android:layout_width="20dip"
+        android:layout_height="20dip"
+        android:layout_gravity="center"
+        android:layout_marginLeft="-50px"
+        android:layout_marginTop="50px"
+        android:src="@drawable/greendot"
+        android:clickable="false"/>
+
+
+    <Button
+        android:id="@+id/btn_test"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20sp"
+        android:layout_marginLeft="-250px"
+        android:layout_gravity="bottom|center"
+        android:text="       try me!       "
+        android:onClick="tryButtonAction"/>
+    <Button
+        android:id="@+id/btn_return"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20sp"
+        android:layout_marginLeft="250px"
+        android:layout_gravity="bottom|center"
+        android:text="       Return       " />
+
+</FrameLayout>
