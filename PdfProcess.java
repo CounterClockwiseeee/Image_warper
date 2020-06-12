@@ -126,7 +126,7 @@ public class PdfProcess {
                         output.close();
                         progressBar.setProgress((int)(((i +1)*100)/bitmaps.size()));
                         //Log.d("PROC",String.format("%d",(int)(((i +1)*100)/bitmaps.size())));
-                        textView.setText(String.format("%s       %d/%d","正在產生PDF......",i+1,bitmaps.size()));
+                        textView.setText(String.format("%s              %d/%d","正在產生PDF......",i+1,bitmaps.size()));
                     }
                     doc.close();
                     isSuccess=true;
