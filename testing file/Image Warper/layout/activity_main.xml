@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:visibility="visible"
+    tools:context=".MainActivity"
+    tools:visibility="visible">
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:id="@+id/pictureButton">
+
+        <ntou.cs.java.imagewarper.RippleButton
+            android:background="#03A9F4"
+            android:layout_width="300dp"
+            android:layout_height="91dp"
+            android:onClick="iButtonAction"
+            android:visibility="visible"
+            tools:text="Select Your Picture"
+            tools:visibility="visible" />
+
+        <TextView
+            android:textSize="20sp"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:clickable="false"
+            android:text="選取照片以修正>>"
+            android:textColor="#FFFFFF"></TextView>
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/pictureButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:id="@+id/cameraButton">
+
+        <ntou.cs.java.imagewarper.RippleButton
+            android:background="#00BCD4"
+            android:layout_width="300dp"
+            android:layout_height="91dp"
+            android:onClick="cButtonAction"
+            tools:text="Take Picture and Warp" />
+
+        <TextView
+            android:textSize="20sp"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:clickable="false"
+            android:text="拍攝照片以修正>>"
+            android:textColor="#FFFFFF"></TextView>
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/pictureButton"
+        android:id="@+id/pdfButton">
+
+        <ntou.cs.java.imagewarper.RippleButton
+            android:background="#2196F3"
+            android:layout_width="300dp"
+            android:layout_height="91dp"
+            android:onClick="pButtonAction"
+            tools:text="turn pictures to PDF" />
+
+        <TextView
+            android:textSize="20sp"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:clickable="false"
+            android:text="製作PDF          >>"
+            android:textColor="#FFFFFF"></TextView>
+    </FrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
