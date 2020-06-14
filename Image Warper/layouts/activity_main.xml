@@ -5,46 +5,57 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:visibility="visible"
-    tools:context=".MainActivity"
+    tools:context="com.example.myapplication.MainActivity"
     tools:visibility="visible">
 
     <Button
         android:id="@+id/pictureButton"
-        android:layout_width="118dp"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="300dp"
         android:layout_height="91dp"
+        android:background="#03A9F4"
         android:onClick="iButtonAction"
-        android:text="Select Your Picture"
+        android:text="選取照片以修正>>"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Select Your Picture"
         tools:visibility="visible" />
 
     <Button
         android:id="@+id/cameraButton"
-        android:layout_width="118dp"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="300dp"
         android:layout_height="91dp"
+        android:background="#00BCD4"
         android:onClick="cButtonAction"
-        android:text="Take Picture and Warp"
+        android:text="拍攝照片以修正>>"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/pictureButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Take Picture and Warp" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/pdfButton"
-        android:layout_width="118dp"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="300dp"
         android:layout_height="91dp"
+        android:background="#2196F3"
         android:onClick="pButtonAction"
-        android:text="turn pictures to PDF"
+        android:text="製作PDF          >>"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/pictureButton"
-        tools:text="turn pictures to PDF" />
+        tools:text="  " />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
