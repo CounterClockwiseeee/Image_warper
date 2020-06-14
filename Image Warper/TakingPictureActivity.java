@@ -1,4 +1,4 @@
-package ntou.cs.java.imagewarper;
+package com.example.myapplication;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
 
 public class TakingPictureActivity extends AppCompatActivity{
     private String currentPhotoPath;
@@ -43,7 +44,7 @@ public class TakingPictureActivity extends AppCompatActivity{
 
             }
             if(photofile!=null){
-                currentPhotoUri= FileProvider.getUriForFile(this,"ntou.cs.java.imagewarper.fileprovider",photofile);
+                currentPhotoUri= FileProvider.getUriForFile(this,"com.example.myapplication.fileprovider",photofile);
             }
         }
         takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,currentPhotoUri);

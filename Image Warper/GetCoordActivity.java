@@ -1,7 +1,8 @@
-package ntou.cs.java.imagewarper;
+package com.example.myapplication;
 
-import android.content.Intent;
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -17,8 +18,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import org.opencv.core.Point;
 import org.opencv.osgi.OpenCVNativeLoader;
 
+
+
+
 public class GetCoordActivity extends AppCompatActivity {
     public class ViewPoint{
+
         private int rawX;//what the user sees (Basically the green dots)
         private int rawY;
         private int pureX;//Actual coordinates of the point in the picture (before changing ratio)
@@ -223,6 +228,7 @@ public class GetCoordActivity extends AppCompatActivity {
     private Bitmap bitmapImage,newBitmap;
     private boolean notSetup=true,pictureWarped=false;
     private Uri imagePath;
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         OpenCVNativeLoader loader =new OpenCVNativeLoader();
@@ -271,14 +277,17 @@ public class GetCoordActivity extends AppCompatActivity {
         findViewById(R.id.btn_test).setEnabled(true);
         findViewById(R.id.textView2).setVisibility(View.INVISIBLE);
         imageView.getLocationOnScreen(coord);
+        int adjX = imageView.getWidth()/3;
+        int adjY = imageView.getHeight()/3;
+
         int viewWidth=imageView.getWidth(),
-            viewHeight=imageView.getHeight();
+                viewHeight=imageView.getHeight();
         viewRawLeft= coord[0];
         viewRawTop = coord[1];
-        greenIcon[0] =new ViewPoint(viewRawLeft,viewRawTop,0,0,(ImageView) findViewById(R.id.icon1));//左上
-        greenIcon[1] =new ViewPoint(viewRawLeft+viewWidth,viewRawTop,viewWidth,0,(ImageView) findViewById(R.id.icon2));//右上
-        greenIcon[2] =new ViewPoint( viewRawLeft+viewWidth,viewRawTop+viewHeight,viewWidth,viewHeight,(ImageView) findViewById(R.id.icon3));//右下
-        greenIcon[3] =new ViewPoint( viewRawLeft,viewRawTop+viewHeight,0,viewHeight,(ImageView) findViewById(R.id.icon4));//左下
+        greenIcon[0] =new ViewPoint(viewRawLeft+adjX,viewRawTop+adjY,0+adjX,0+adjY,(ImageView) findViewById(R.id.icon1));//左上
+        greenIcon[1] =new ViewPoint(viewRawLeft+viewWidth-adjX,viewRawTop+adjY,viewWidth-adjX,0+adjY,(ImageView) findViewById(R.id.icon2));//右上
+        greenIcon[2] =new ViewPoint( viewRawLeft+viewWidth-adjX,viewRawTop+viewHeight-adjY,viewWidth-adjX,viewHeight-adjY,(ImageView) findViewById(R.id.icon3));//右下
+        greenIcon[3] =new ViewPoint( viewRawLeft+adjX,viewRawTop+viewHeight-adjY,0+adjX,viewHeight-adjY,(ImageView) findViewById(R.id.icon4));//左下
         for(ViewPoint icon:greenIcon){
             icon.greenDotImage.setVisibility(View.VISIBLE);
             icon.getGreenDotImage().layout(icon.getLayoutCoords(0),icon.getLayoutCoords(1),icon.getLayoutCoords(2),icon.getLayoutCoords(3));
@@ -286,6 +295,14 @@ public class GetCoordActivity extends AppCompatActivity {
         sizeRatioX=(float) bitmapImage.getWidth() / imageView.getWidth();
         sizeRatioY=(float) bitmapImage.getHeight() / imageView.getHeight();
     }
+
+    public void clear(View view){
+        ImageView imageView = findViewById(R.id.imgV);
+        BitmapDrawable drawable = (BitmapDrawable)imageView.getDrawable();
+        imageView.setImageBitmap(ImageProcess.clearify(drawable.getBitmap()));
+        newBitmap = ImageProcess.clearify(drawable.getBitmap());
+    }
+
     public void tryButtonAction(View view){
         if(pictureWarped){
             ImageProcess.saveImage_re(newBitmap,this);
@@ -295,8 +312,8 @@ public class GetCoordActivity extends AppCompatActivity {
             icon.greenDotImage.setVisibility(View.INVISIBLE);
         }
         findViewById(R.id.textView2).setVisibility(View.VISIBLE);
-        ((TextView)findViewById(R.id.textView2)).setText("Here's your image!");
-        ((Button)findViewById(R.id.btn_test)).setText("Save it!");
+        ((TextView)findViewById(R.id.textView2)).setText("修正完成!");
+        ((Button)findViewById(R.id.btn_test)).setText("儲存");
         newBitmap=ImageProcess.myWarpPerspective(bitmapImage,new Point((int)(greenIcon[0].getPureX()*sizeRatioX),(int)(greenIcon[0].getPureY()*sizeRatioY)),new Point((int)(greenIcon[1].getPureX()*sizeRatioX),(int)(greenIcon[1].getPureY()*sizeRatioY)),new Point((int)(greenIcon[2].getPureX()*sizeRatioX),(int)(greenIcon[2].getPureY()*sizeRatioY)),new Point((int)(greenIcon[3].getPureX()*sizeRatioX),(int)(greenIcon[3].getPureY()*sizeRatioY)));
         imageView.setImageBitmap(newBitmap);
         pictureWarped=true;

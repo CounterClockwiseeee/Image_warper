@@ -1,4 +1,4 @@
-package ntou.cs.java.imagewarper;
+package com.example.myapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -8,7 +8,11 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
+
+import com.example.myapplication.TakingPictureActivity;
+
 import org.opencv.osgi.OpenCVNativeLoader;
+
 
 public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
@@ -25,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         loader.init();
     }
     public void cButtonAction(View view){
-        Intent pictureIntent=new Intent (this,TakingPictureActivity.class);
+        Intent pictureIntent=new Intent (this, TakingPictureActivity.class);
         startActivity(pictureIntent);
     }
     public void pButtonAction(View view){

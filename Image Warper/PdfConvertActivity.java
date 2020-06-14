@@ -1,21 +1,25 @@
-package ntou.cs.java.imagewarper;
+package com.example.myapplication;
 
+import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.util.Log;
 
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
-import static ntou.cs.java.imagewarper.PdfProcess.*;
-import static ntou.cs.java.imagewarper.PdfProcess.createPdfOfImagesWithUserInput;
 
 
 public class PdfConvertActivity extends AppCompatActivity {
@@ -23,11 +27,46 @@ public class PdfConvertActivity extends AppCompatActivity {
     private boolean selectedPicture=false;
     public ArrayList<Bitmap> bitmaps = new ArrayList<>();
 
+    private MyHandler myHandler;
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        myHandler.removeCallbacksAndMessages(null);
+    }
+    static class MyHandler extends Handler {
+        // WeakReference to the outer class's instance.
+        private WeakReference<PdfConvertActivity> mOuter;
+
+        MyHandler(PdfConvertActivity activity) {
+            mOuter = new WeakReference<PdfConvertActivity>(activity);
+        }
+        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+        @Override
+        public void handleMessage( Message msg) {
+            final PdfConvertActivity outer = mOuter.get();
+            if (outer != null) {
+                super.handleMessage(msg);
+                AlertDialog.Builder builder = new AlertDialog.Builder(this.mOuter.get());
+                builder.setCancelable(false);
+                builder.setMessage(msg.what==1?"成功建立PDF!":"發生不明錯誤，請再試一次");
+                builder.setNegativeButton("確定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        outer.finish();
+                    }
+                });
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+            }
+        }
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.pdf_convert_layout);
+        myHandler = new MyHandler(this);
         selectImageAndCreatePdf();
     }
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
@@ -66,7 +105,7 @@ public class PdfConvertActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
-            createPdfOfImagesWithUserInput(this,bitmaps);
+            PdfProcess2.createPdfOfImagesWithUserInput(this,myHandler,bitmaps);
         }
     }
 }
