@@ -3,6 +3,7 @@ package com.example.myapplication;
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -18,7 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import org.opencv.core.Point;
 import org.opencv.osgi.OpenCVNativeLoader;
 
-
+import java.io.IOException;
 
 
 public class GetCoordActivity extends AppCompatActivity {
@@ -225,7 +226,7 @@ public class GetCoordActivity extends AppCompatActivity {
     private ImageView imageView;
     private ViewPoint greenIcon[] = new ViewPoint[4];
     private float sizeRatioX,sizeRatioY;
-    private Bitmap bitmapImage,newBitmap;
+    private Bitmap bitmapImage;
     private boolean notSetup=true,pictureWarped=false;
     private Uri imagePath;
     @SuppressLint("ClickableViewAccessibility")
@@ -240,6 +241,7 @@ public class GetCoordActivity extends AppCompatActivity {
         try
         {
             bitmapImage = MediaStore.Images.Media.getBitmap(this.getContentResolver() , imagePath);
+            //bitmapImage=modifyOrientation(bitmapImage,imagePath.getPath());
             imageView.setImageBitmap(bitmapImage);
         }
         catch (Exception e)
@@ -292,6 +294,9 @@ public class GetCoordActivity extends AppCompatActivity {
             icon.greenDotImage.setVisibility(View.VISIBLE);
             icon.getGreenDotImage().layout(icon.getLayoutCoords(0),icon.getLayoutCoords(1),icon.getLayoutCoords(2),icon.getLayoutCoords(3));
         }
+
+        findViewById(R.id.rotate).setEnabled(false);
+
         sizeRatioX=(float) bitmapImage.getWidth() / imageView.getWidth();
         sizeRatioY=(float) bitmapImage.getHeight() / imageView.getHeight();
     }
@@ -299,19 +304,45 @@ public class GetCoordActivity extends AppCompatActivity {
     public void clear(View view){
         ImageView imageView = findViewById(R.id.imgV);
         BitmapDrawable drawable = (BitmapDrawable)imageView.getDrawable();
-        imageView.setImageBitmap(ImageProcess.clearify(drawable.getBitmap()));
-        newBitmap = ImageProcess.clearify(drawable.getBitmap());
+        Bitmap temp = drawable.getBitmap();
+        temp = ImageProcess.clearify(temp);
+        imageView.setImageBitmap(temp);
+        bitmapImage = temp;
     }
 
     public void rotate(View view){
         ImageView imageView = findViewById(R.id.imgV);
         BitmapDrawable drawable = (BitmapDrawable)imageView.getDrawable();
-        imageView.setImageBitmap(ImageProcess.rotate90(drawable.getBitmap()));
-        newBitmap = ImageProcess.clearify(drawable.getBitmap());
+        Bitmap temp = drawable.getBitmap();
+        temp = ImageProcess.rotate90(temp);
+        imageView.setImageBitmap(temp);
+        bitmapImage = temp;
     }
+
+    public static Bitmap modifyOrientation(Bitmap bitmap, String image_absolute_path) throws IOException {
+        ExifInterface ei = new ExifInterface(image_absolute_path);
+        int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+
+        switch (orientation) {
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                return ImageProcess.rotate90(bitmap);
+
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                return ImageProcess.rotate90(ImageProcess.rotate90(bitmap));
+
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                return ImageProcess.rotate90(ImageProcess.rotate90(ImageProcess.rotate90(bitmap)));
+
+            default:
+                return bitmap;
+        }
+    }
+
+
+
     public void tryButtonAction(View view){
         if(pictureWarped){
-            ImageProcess.saveImage_re(newBitmap,this);
+            ImageProcess.saveImage_re(bitmapImage,this);
             finish();
         }
         for(ViewPoint icon:greenIcon){
@@ -320,8 +351,9 @@ public class GetCoordActivity extends AppCompatActivity {
         findViewById(R.id.textView2).setVisibility(View.VISIBLE);
         ((TextView)findViewById(R.id.textView2)).setText("修正完成!");
         ((Button)findViewById(R.id.btn_test)).setText("儲存");
-        newBitmap=ImageProcess.myWarpPerspective(bitmapImage,new Point((int)(greenIcon[0].getPureX()*sizeRatioX),(int)(greenIcon[0].getPureY()*sizeRatioY)),new Point((int)(greenIcon[1].getPureX()*sizeRatioX),(int)(greenIcon[1].getPureY()*sizeRatioY)),new Point((int)(greenIcon[2].getPureX()*sizeRatioX),(int)(greenIcon[2].getPureY()*sizeRatioY)),new Point((int)(greenIcon[3].getPureX()*sizeRatioX),(int)(greenIcon[3].getPureY()*sizeRatioY)));
-        imageView.setImageBitmap(newBitmap);
+        ((Button)findViewById(R.id.rotate)).setEnabled(true);
+        bitmapImage=ImageProcess.myWarpPerspective(bitmapImage,new Point((int)(greenIcon[0].getPureX()*sizeRatioX),(int)(greenIcon[0].getPureY()*sizeRatioY)),new Point((int)(greenIcon[1].getPureX()*sizeRatioX),(int)(greenIcon[1].getPureY()*sizeRatioY)),new Point((int)(greenIcon[2].getPureX()*sizeRatioX),(int)(greenIcon[2].getPureY()*sizeRatioY)),new Point((int)(greenIcon[3].getPureX()*sizeRatioX),(int)(greenIcon[3].getPureY()*sizeRatioY)));
+        imageView.setImageBitmap(bitmapImage);
         pictureWarped=true;
     }
 }
