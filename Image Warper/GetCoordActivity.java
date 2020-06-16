@@ -303,6 +303,12 @@ public class GetCoordActivity extends AppCompatActivity {
         newBitmap = ImageProcess.clearify(drawable.getBitmap());
     }
 
+    public void rotate(View view){
+        ImageView imageView = findViewById(R.id.imgV);
+        BitmapDrawable drawable = (BitmapDrawable)imageView.getDrawable();
+        imageView.setImageBitmap(ImageProcess.rotate90(drawable.getBitmap()));
+        newBitmap = ImageProcess.clearify(drawable.getBitmap());
+    }
     public void tryButtonAction(View view){
         if(pictureWarped){
             ImageProcess.saveImage_re(newBitmap,this);

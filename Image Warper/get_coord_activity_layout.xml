@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    tools:context="com.example.myapplication.GetCoordActivity">
+    <ImageView
+        android:id="@+id/imgV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:adjustViewBounds="true"
+        android:maxHeight="2040px"
+        android:maxWidth="2040px" />
+    <!--左上-->
+    <ImageView
+        android:id="@+id/icon1"
+        android:layout_width="20dip"
+        android:layout_height="20dip"
+        android:layout_gravity="center"
+        android:layout_marginLeft="-50px"
+        android:layout_marginTop="-50px"
+        android:clickable="false"
+        android:src="@drawable/greendot"
+        android:visibility="invisible"/>
+    <!--右上-->
+    <!--右下-->
+
+    <!--左下-->
+    <ImageView
+        android:id="@+id/icon2"
+        android:layout_width="20dip"
+        android:layout_height="20dip"
+        android:layout_gravity="center"
+        android:layout_marginLeft="50px"
+        android:layout_marginTop="-50px"
+        android:clickable="false"
+        android:src="@drawable/greendot"
+        android:visibility="invisible"/>
+
+    <ImageView
+        android:id="@+id/icon3"
+        android:layout_width="20dip"
+        android:layout_height="20dip"
+        android:layout_gravity="center"
+        android:layout_marginLeft="50px"
+        android:layout_marginTop="50px"
+        android:clickable="false"
+        android:src="@drawable/greendot"
+        android:visibility="invisible"/>
+
+    <ImageView
+        android:id="@+id/icon4"
+        android:layout_width="20dip"
+        android:layout_height="20dip"
+        android:layout_gravity="center"
+        android:layout_marginLeft="-50px"
+        android:layout_marginTop="50px"
+        android:src="@drawable/greendot"
+        android:clickable="false"
+        android:visibility="invisible"/>
+
+
+    <Button
+        android:id="@+id/btn_test"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginRight="150dp"
+        android:layout_marginBottom="20sp"
+        android:background="#03A9F4"
+        android:enabled="false"
+        android:onClick="tryButtonAction"
+        android:padding="10dp"
+        android:text="修正"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="#FFFFFF"
+        android:gravity="center_horizontal"
+        android:text="-點擊照片開始選取範圍-"
+        android:textSize="32dp" />
+
+    <Button
+        android:id="@+id/clearify"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="20sp"
+        android:background="#03A9F4"
+        android:enabled="true"
+        android:onClick="clear"
+        android:padding="10dp"
+        android:text="清晰化"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp" />
+
+    <Button
+        android:id="@+id/rotate"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginLeft="150dp"
+        android:layout_marginBottom="20sp"
+        android:background="#03A9F4"
+        android:enabled="true"
+        android:onClick="rotate"
+        android:padding="10dp"
+        android:text="右轉90度"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp" />
+
+</FrameLayout>

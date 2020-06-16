@@ -12,6 +12,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.Toast;
 
+import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint2f;
@@ -106,7 +107,20 @@ public class ImageProcess {
         return resultBitmap;
     }
 
+    public static Bitmap rotate90(Bitmap bitmap){
+        Mat src = new Mat(bitmap.getWidth(),bitmap.getHeight(),CvType.CV_8UC3);
+        Utils.bitmapToMat(bitmap,src);
+        Core.rotate(src,src,Core.ROTATE_90_COUNTERCLOCKWISE);
+        Core.rotate(src,src,Core.ROTATE_90_COUNTERCLOCKWISE);
+        Core.rotate(src,src,Core.ROTATE_90_COUNTERCLOCKWISE);
+        Bitmap result = Bitmap.createBitmap(src.width(),src.height(), Bitmap.Config.ARGB_8888);
+        Utils.matToBitmap(src,result);
+        return result;
+    }
+
     private static double distance(Point a,Point b) {
         return Math.sqrt((a.x-b.x)*(a.x-b.x) + (a.y-b.y)*(a.y-b.y));
     }
+
+
 }
