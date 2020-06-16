@@ -1,4 +1,4 @@
-把 greendotc和icon丟到 res/drawable
+把 greendotc和icon和buttom_round.xml丟到 res/drawable
 把整個xml資料夾丟到res的目錄底下
 color, string, style.xml丟到 values中
 layout中的.xml丟到layout資料夾
