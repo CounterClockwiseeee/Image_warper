@@ -20,6 +20,7 @@ import org.opencv.core.Point;
 import org.opencv.osgi.OpenCVNativeLoader;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 
 public class GetCoordActivity extends AppCompatActivity {
@@ -222,27 +223,44 @@ public class GetCoordActivity extends AppCompatActivity {
             return 0;
         }
     }
-    private int coord[]=new int[2],viewRawLeft,viewRawTop,targ=-1;
+    private int[] coord =new int[2];
+    private int viewRawLeft;
+    private int viewRawTop;
+    private int targ=-1;
     private ImageView imageView;
-    private ViewPoint greenIcon[] = new ViewPoint[4];
+    private ViewPoint[] greenIcon = new ViewPoint[4];
     private float sizeRatioX,sizeRatioY;
     private Bitmap bitmapImage;
     private boolean notSetup=true,pictureWarped=false;
     private Uri imagePath;
+    private ArrayList<Bitmap> stack;
+    private int current;
+
+
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         OpenCVNativeLoader loader =new OpenCVNativeLoader();
         loader.init();
         super.onCreate(savedInstanceState);
+
+        stack = new ArrayList<>();
+        current = -1;
+
         setContentView(R.layout.get_coord_activity_layout);
         imageView = (ImageView) findViewById(R.id.imgV);
         imagePath = getIntent().getParcelableExtra("imagePath");
+
         try
         {
             bitmapImage = MediaStore.Images.Media.getBitmap(this.getContentResolver() , imagePath);
             //bitmapImage=modifyOrientation(bitmapImage,imagePath.getPath());
             imageView.setImageBitmap(bitmapImage);
+            stack.add(bitmapImage);
+            current++;
+            findViewById(R.id.undo).setEnabled(false);
+            findViewById(R.id.redo).setEnabled(false);
+
         }
         catch (Exception e)
         {
@@ -308,6 +326,10 @@ public class GetCoordActivity extends AppCompatActivity {
         temp = ImageProcess.clearify(temp);
         imageView.setImageBitmap(temp);
         bitmapImage = temp;
+        stack.add(bitmapImage);
+        current++;
+        findViewById(R.id.undo).setEnabled(true);
+
     }
 
     public void rotate(View view){
@@ -317,6 +339,10 @@ public class GetCoordActivity extends AppCompatActivity {
         temp = ImageProcess.rotate90(temp);
         imageView.setImageBitmap(temp);
         bitmapImage = temp;
+        stack.add(bitmapImage);
+        current++;
+        findViewById(R.id.undo).setEnabled(true);
+
     }
 
     public static Bitmap modifyOrientation(Bitmap bitmap, String image_absolute_path) throws IOException {
@@ -338,8 +364,6 @@ public class GetCoordActivity extends AppCompatActivity {
         }
     }
 
-
-
     public void tryButtonAction(View view){
         if(pictureWarped){
             ImageProcess.saveImage_re(bitmapImage,this);
@@ -354,6 +378,69 @@ public class GetCoordActivity extends AppCompatActivity {
         ((Button)findViewById(R.id.rotate)).setEnabled(true);
         bitmapImage=ImageProcess.myWarpPerspective(bitmapImage,new Point((int)(greenIcon[0].getPureX()*sizeRatioX),(int)(greenIcon[0].getPureY()*sizeRatioY)),new Point((int)(greenIcon[1].getPureX()*sizeRatioX),(int)(greenIcon[1].getPureY()*sizeRatioY)),new Point((int)(greenIcon[2].getPureX()*sizeRatioX),(int)(greenIcon[2].getPureY()*sizeRatioY)),new Point((int)(greenIcon[3].getPureX()*sizeRatioX),(int)(greenIcon[3].getPureY()*sizeRatioY)));
         imageView.setImageBitmap(bitmapImage);
+
+        stack.add(bitmapImage);
+        current++;
+        findViewById(R.id.undo).setEnabled(true);
+
         pictureWarped=true;
+    }
+
+    public void undo(View view){
+        Button undo = findViewById(R.id.undo);
+        Button redo = findViewById(R.id.redo);
+        if(current>1){
+            undo.setEnabled(true);
+            redo.setEnabled(true);
+            Bitmap temp = stack.get(--current);
+            ImageView imageView=(ImageView)findViewById(R.id.imgV);
+            imageView.setImageBitmap(temp);
+            bitmapImage=temp;
+        }else if(current==1){
+            undo.setEnabled(false);
+            redo.setEnabled(true);
+            Bitmap temp = stack.get(--current);
+            ImageView imageView=(ImageView)findViewById(R.id.imgV);
+            imageView.setImageBitmap(temp);
+            bitmapImage=temp;
+        }else if(current==0){
+            undo.setEnabled(false);
+            redo.setEnabled(true);
+            Bitmap temp = stack.get(current);
+            ImageView imageView=(ImageView)findViewById(R.id.imgV);
+            imageView.setImageBitmap(temp);
+            bitmapImage=temp;
+        }else{
+            undo.setEnabled(false);
+        }
+    }
+
+    public void redo(View view){
+        Button redo = findViewById(R.id.redo);
+        Button undo = findViewById(R.id.undo);
+        if(current<stack.size()-2){
+            undo.setEnabled(true);
+            redo.setEnabled(true);
+            Bitmap temp = stack.get(++current);
+            ImageView imageView=(ImageView)findViewById(R.id.imgV);
+            imageView.setImageBitmap(temp);
+            bitmapImage=temp;
+        }else if(current==stack.size()-2){
+            undo.setEnabled(true);
+            redo.setEnabled(false);
+            Bitmap temp = stack.get(++current);
+            ImageView imageView=(ImageView)findViewById(R.id.imgV);
+            imageView.setImageBitmap(temp);
+            bitmapImage=temp;
+        }else if(current==stack.size()-1){
+            undo.setEnabled(true);
+            redo.setEnabled(false);
+            Bitmap temp = stack.get(current);
+            ImageView imageView=(ImageView)findViewById(R.id.imgV);
+            imageView.setImageBitmap(temp);
+            bitmapImage=temp;
+        }else{
+            redo.setEnabled(false);
+        }
     }
 }
